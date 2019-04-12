@@ -1,0 +1,8 @@
+#项目运行中生产的临时库不用
+lib/temp
+i#可执行文件不用
+bin
+#不相干文件   
+.temp
+.backup
+.cmake
