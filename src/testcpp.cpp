@@ -1,13 +1,19 @@
 #include <iostream>
-#include <string>
-#include "testh.h"
-#include "testsayoneh.h"
-#include "testsaytwoh.h"
+
+#include "Test.h"
+#include "template/TestTemplate.hpp"
+#include "global/test_global.h"
+
 using namespace std;
+
+void test(){
+    string hostname;
+    string ip; 
+    get(hostname, ip);
+    cout << hostname << "------------:" << ip <<endl;
+}
+
 int main(){
-    sayone();
-    saytwo();
-    cout<<"main"<<endl;
-  
-    return 0;
+	test();	
+	cout << "main done!" << endl;
 }

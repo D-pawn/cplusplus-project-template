@@ -1,0 +1,45 @@
+cmake_minimum_required(VERSION 2.8)
+
+# 设置编译选项
+# 允许c++11标准、O3优化、多线程。match选项可避免一些cpu上的问题  -std=c++11 -march=native -O3
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread" )
+#关闭cmake自动天剑的[rpath]
+#set(CMAKE_SKIP_RPATH TRUE)
+
+#基本自定义变量-自定义变量
+set(ROOT "${CMAKE_CURRENT_LIST_DIR}")
+set(SRC_ROOT_NAME "src") 
+set(BIN_ROOT_NAME "bin") 
+set(BIN_NAME "testcpp") 
+set(BIN_INCLUDE_ROOT_NAME "include") 
+set(BIN_LIB_ROOT_NAME "lib") 
+set(BIN_LIB_SO_ROOT_NAME "dynamic") 
+set(BIN_LIB_A_ROOT_NAME "static") 
+set(BIN_LIB_TEMP_ROOT_NAME "temp") 
+
+#当前项目定义-自定义变量
+set(SRC_ROOT "${ROOT}/${SRC_ROOT_NAME}")
+set(SRC_LIST "")
+set(BIN_ROOT "${ROOT}/${BIN_ROOT_NAME}") 
+set(INCLUDE_ROOT "${SRC_ROOT}" "${ROOT}/${BIN_INCLUDE_ROOT_NAME}")  #C++编译时，教科书中写道:#include “headfile.h”优先在当前目录查找头文件 
+set(LIB_ROOT "${SRC_ROOT}"  "${ROOT}/${BIN_LIB_ROOT_NAME}") 
+set(LIB_LIST "ldtest") # 例如  set(LIB_LIST "libtesth.so") 
+
+#通过cmake命令设置变量
+aux_source_directory(${SRC_ROOT} SRC_LIST)
+aux_source_directory(${SRC_ROOT}/ld LD_LIST)
+
+add_library("ldtest" SHARED ${LD_LIST})
+
+#cmake变量-cmake变量
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_ROOT})
+
+#项目编译连接
+include_directories(${INCLUDE_ROOT})
+link_directories(${LIB_ROOT})
+add_executable(${BIN_NAME} ${SRC_LIST})
+target_link_libraries(${BIN_NAME} ${LIB_LIST})
+SET_TARGET_PROPERTIES(${BIN_NAME}
+    PROPERTIES BUILD_RPATH "$ORIGIN/lib")
+message("===log===SRC_LIST:" ${SRC_LIST})
+message("===log===LD_LIST:" ${LD_LIST})
